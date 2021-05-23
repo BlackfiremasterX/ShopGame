@@ -1,19 +1,45 @@
 fun main() {
+
+    Info()
     ShopGame()
 
 
 }
 
+fun Info()
+{
+    print("Вас привествует игра 'ShopGame', тут есть покупки и закупки. C оптом и без опта.\n" +
+            "scan - обзор цен на все товары\n" +
+            "buy - покупка товара за цену указанную сверху\n" +
+            "sell - продажа выбранных Вами продуктов, которые есть у Вас в наличии\n" +
+            "В начале игры у Вас на депозите есть деньги(1000$)\n" +
+            "Вы должны их преумножить, но помните, что помимо товаров деньги можно потерять на функции scan(-5 за 1 раз)\n" +
+            "Пишите команды в консоль для покупки(buy), продажи(sell) и поиска информации(scan)\n")
+}
+
+
+
 fun ShopGame() {
 
+    val goods_names = mutableMapOf(
+        1 to "Кока-Коли",
+        2 to "Молоко",
+        3 to "Хлеб",
+        4 to "Вода",
+        5 to "Собакас"
+    )
+
+    var pr = goods_names.values
     var Money = 1000
     var koka_count = 0
     var milk_count = 0
     var bread_count = 0
     var water_count = 0
     var sobakas_count = 0
+    var mass_buy_sell = 0
     var product = 0
     var product_price = 0
+    var product_count = 0
 
 
     var run = true
@@ -23,26 +49,68 @@ fun ShopGame() {
         var user_choise = readLine()!!.toString().toLowerCase()
         when (user_choise) {
             "buy" -> {
-                Money = Money - product_price;println("Ваш счет: $Money$")
-                when (product) {
-                    1 -> koka_count++
-                    2 -> milk_count++
-                    3 -> bread_count++
-                    4 -> water_count++
-                    5 -> sobakas_count++
-                    else -> print("\nОшибка!")
+
+                print("Выберите количество товара для покупки: "); mass_buy_sell = readLine()!!.toInt()
+
+                if (Money >= (product_price * mass_buy_sell)) {
+                    Money = Money - product_price * mass_buy_sell;println("Ваш счет: $Money$")
+                    when (product) {
+                        1 -> koka_count = koka_count + mass_buy_sell
+                        2 -> milk_count = milk_count + mass_buy_sell
+                        3 -> bread_count = bread_count + mass_buy_sell
+                        4 -> water_count = water_count + mass_buy_sell
+                        5 -> sobakas_count = sobakas_count + mass_buy_sell
+                        else -> print("\nОшибка!")
+                    }
+                } else {
+                    println("Недостаточно денег! Вы можете купить только ${(Money / product_price).toInt()}шт.")
                 }
+
+
             }
             "sell" -> {
-                when(product)
-                {
-                    1 -> if(koka_count>0){koka_count--}
-                    2 -> if(milk_count>0){milk_count--}
-                    3 -> if(bread_count>0){bread_count--}
-                    4 -> if(water_count>0){water_count--}
-                    5 -> if(sobakas_count>0){sobakas_count--}
+                print(
+                    "\nВыберите продукт для продажи:\n" +
+                            "1.Кока-Коли[$koka_count]\n" +
+                            "2.Молоко[$milk_count]\n" +
+                            "3.Хлеб[$bread_count]\n" +
+                            "4.Вода[$water_count]\n" +
+                            "5.Собакас[$sobakas_count]\n"
+                ); print("Выберите продукт: ");
+                product = readLine()!!.toInt();
+                print("Выберите количество товара для продажи: "); mass_buy_sell = readLine()!!.toInt()
+                when (product) {
+                    1 -> {
+                        product_count = koka_count
+                        if ((product_count > 0)&&(product_count>=mass_buy_sell)) {
+                            koka_count = koka_count - mass_buy_sell
+                        }
+                    }
+                    2 -> {
+                        product_count = milk_count
+                        if ((product_count > 0)&&(product_count>=mass_buy_sell)) {
+                           milk_count =  milk_count - mass_buy_sell
+                        }
+                    }
+                    3 -> {
+                        product_count = bread_count
+                        if ((product_count > 0)&&(product_count>=mass_buy_sell)) {
+                            bread_count = bread_count - mass_buy_sell
+                        }
+                    }
+                    4 -> {
+                        product_count = water_count
+                        if ((product_count > 0)&&(product_count>=mass_buy_sell)) {
+                            water_count = water_count - mass_buy_sell
+                        }
+                    }
+                    5 -> {
+                        product_count = sobakas_count
+                        if ((product_count > 0)&&(product_count>=mass_buy_sell)) {
+                            sobakas_count = sobakas_count - mass_buy_sell
+                        }
+                    }
                     else -> print("\nОшибка!")
-
 
 
                 }
@@ -50,16 +118,20 @@ fun ShopGame() {
 
 
 
-                Money = Money + product_price;println("Ваш счет: $Money$")
+                Money = Money + product_price * mass_buy_sell;println("Ваш счет: $Money$")
             }
             "scan" -> {
+
+                Money = Money-5
+
+
                 print(
                     "\nВыберите продукт:\n" +
-                            "1.Кока-Коли\n" +
-                            "2.Молоко\n" +
-                            "3.Хлеб\n" +
-                            "4.Вода\n" +
-                            "5.Собакас\n"
+                            "1.Кока-Коли[$koka_count]\n" +
+                            "2.Молоко[$milk_count]\n" +
+                            "3.Хлеб[$bread_count]\n" +
+                            "4.Вода[$water_count]\n" +
+                            "5.Собакас[$sobakas_count]\n"
                 ); print("Выберите продукт: ");
                 product = readLine()!!.toInt();
                 var koka = 56
@@ -70,19 +142,24 @@ fun ShopGame() {
 
                 when (product) {
                     1 -> {
-                        koka = (40..64).random();print("\nКока-Коли: $koka$\n");product_price = koka;print("Ваш банк: $Money$")
+                        koka = (40..64).random();print("\nКока-Коли: $koka$\n");product_price =
+                            koka;print("Ваш банк: $Money$")
                     }
                     2 -> {
-                        milk = (35..70).random();print("\nМолоко: $milk$\n");product_price = milk;print("Ваш банк: $Money$")
+                        milk = (35..70).random();print("\nМолоко: $milk$\n");product_price =
+                            milk;print("Ваш банк: $Money$")
                     }
                     3 -> {
-                        bread = (15..30).random();print("\nХлеб: $bread$\n");product_price = bread;print("Ваш банк: $Money$")
+                        bread = (15..30).random();print("\nХлеб: $bread$\n");product_price =
+                            bread;print("Ваш банк: $Money$")
                     }
                     4 -> {
-                        water = (8..22).random();print("\nВода: $water$\n");product_price = water;print("Ваш банк: $Money$")
+                        water = (8..22).random();print("\nВода: $water$\n");product_price =
+                            water;print("Ваш банк: $Money$")
                     }
                     5 -> {
-                        sobakas = (80..150).random();print("\nСобакас: $sobakas$\n");product_price = sobakas;print("Ваш банк: $Money$")
+                        sobakas = (80..150).random();print("\nСобакас: $sobakas$\n");product_price =
+                            sobakas;print("Ваш банк: $Money$")
                     }
                     else -> print("\nОшибка!")
                 }
@@ -93,7 +170,3 @@ fun ShopGame() {
 
     }
 }
-
-
-
-
