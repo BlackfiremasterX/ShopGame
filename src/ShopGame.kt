@@ -140,7 +140,6 @@ fun ShopGame() {
                 var bread = 23
                 var water = 19
                 var sobakas = 115
-
                 when (product) {
                     1 -> {
                         name_buffer = "Кока-коли"
